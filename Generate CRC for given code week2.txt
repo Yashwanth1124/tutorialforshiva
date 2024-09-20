@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <string.h> // Include for strlen function
+
+int main() {
+    int i, j, k, m, n, cl;
+    char a[100], b[100], c[200]; // Increased size for c
+
+    // Input polynomial and frame
+    printf("\n ENTER POLYNOMIAL: ");
+    scanf("%s", a);
+    printf("\n ENTER THE FRAME: ");
+    scanf("%s", b);
+
+    m = strlen(a);
+    n = strlen(b);
+
+    // Remove leading zeros from polynomial
+    int start = 0;
+    while (start < m && a[start] == '0') {
+        start++;
+    }
+    m -= start;
+    for (i = 0; i < m; i++) {
+        a[i] = a[start + i];
+    }
+    a[m] = '\0'; // Null terminate the polynomial string
+
+    // Prepare the frame with appended zeros
+    cl = m + n - 1;
+    for (i = 0; i < n; i++) {
+        c[i] = b[i];
+    }
+    for (i = n; i < cl; i++) {
+        c[i] = '0';
+    }
+    c[i] = '\0'; // Null terminate the frame string
+
+    // Perform XOR operation
+    for (i = 0; i <= cl - n; i++) {
+        if (c[i] == '1') {
+            for (j = i, k = 0; k < m; j++, k++) {
+                c[j] = (c[j] == a[k]) ? '0' : '1'; // XOR operation
+            }
+        }
+    }
+
+    // Copy the result back into the message
+    for (i = 0; i < n; i++) {
+        c[i] = b[i];
+    }
+
+    // Print the result
+    printf("\n THE MESSAGE IS: %s", c);
+    return 0;
+}

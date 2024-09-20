@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h> // For exit()
+#include <string.h> // For strlen()
+
+int main()
+{
+    int i, n, n1, k, j, ni, len;
+    char f[8] = {'0', '1', '1', '1', '1', '1', '1', '0'};
+    static int ds[100];
+    char st[100];
+
+    printf("\nEnter the stuffed data: ");
+    fgets(st, sizeof(st), stdin); // Use fgets instead of gets
+    n = strlen(st);
+    st[n - 1] = '\0'; // Remove newline character from fgets input
+
+    ni = k = 0;
+    for (i = 8; i < 16; i++)
+    {
+        if (st[i] != f[k++])
+        {
+            printf("\nError in flag");
+            return 1; // Exit with error code
+        }
+    }
+
+    k = 0;
+    for (i = n - 8; i < n; i++)
+    {
+        if (f[k++] != st[i])
+        {
+            printf("\nError in flag");
+            return 1; // Exit with error code
+        }
+    }
+
+    for (i = 0; i < n; i++)
+    {
+        st[i] = st[i] - '0';
+    }
+
+    len = 0;
+    j = 7;
+    for (i = 0; i < 8; i++)
+    {
+        len += (1 << i) * st[j--]; // Calculate length using bit shifting
+    }
+
+    k = ni = j = 0;
+    for (i = 16; i < n - 8; i++)
+    {
+        if (st[i] == 1)
+        {
+            ni++;
+            if (ni == 5)
+            {
+                ds[j++] = 1;
+                i++; // Skip the stuffed bit
+                k++;
+                ni = 0;
+            }
+            else
+            {
+                ds[j++] = 1;
+            }
+        }
+        else
+        {
+            ds[j++] = 0;
+        }
+    }
+
+    n1 = n - 24 - k;
+    if (len * 8 != n1)
+    {
+        printf("\nError in data length");
+        return 1; // Exit with error code
+    }
+
+    printf("\nAfter destuffing: ");
+    for (i = 0; i < n1; i++)
+    {
+        printf("%d", ds[i]);
+    }
+    printf("\n");
+
+    return 0;
+}

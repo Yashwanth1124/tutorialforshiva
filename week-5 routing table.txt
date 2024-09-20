@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <limits.h>  // For INT_MAX
+
+int main() {
+    int i, j, k, nv, sn, noadj;
+    int edel[20], tdel[20][20], min;
+    char sv, adver[20], ch;
+    
+    // Input number of vertices
+    printf("\nENTER THE NO.OF VERTICES: ");
+    scanf("%d", &nv);
+    
+    // Input source vertex number and name
+    printf("\nENTER THE SOURCE VERTEX NUMBER AND NAME: ");
+    scanf("%d", &sn);
+    getchar();  // To consume the newline character left by scanf
+    sv = getchar();
+    
+    // Input number of adjacent vertices
+    printf("\nENTER NO.OF ADJACENT VERTICES TO VERTEX %c: ", sv);
+    scanf("%d", &noadj);
+    
+    // Input delay and node names for each adjacent vertex
+    for (i = 0; i < noadj; i++) {
+        printf("\nENTER TIME DELAY AND NODE NAME: ");
+        scanf("%d %c", &edel[i], &adver[i]);
+    }
+    
+    // Input time delay from each adjacent vertex to all other nodes
+    for (i = 0; i < noadj; i++) {
+        printf("\nENTER THE TIME DELAY FROM %c TO ALL OTHER NODES: ", adver[i]);
+        for (j = 0; j < nv; j++) {
+            scanf("%d", &tdel[i][j]);
+        }
+    }
+    
+    // Calculate and display the delay via each vertex
+    printf("\nDELAY VIA--VERTEX\n");
+    for (i = 0; i < nv; i++) {
+        min = INT_MAX;
+        ch = 0;
+        for (j = 0; j < noadj; j++) {
+            if (min > (tdel[j][i] + edel[j])) {
+                min = tdel[j][i] + edel[j];
+                ch = adver[j];
+            }
+        }
+        if (i != sn - 1)
+            printf("\n%d %c", min, ch);
+        else
+            printf("\n0 -");
+    }
+
+    return 0;
+}

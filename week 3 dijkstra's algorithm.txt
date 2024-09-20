@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <limits.h>  // For INT_MAX
+
+#define INF INT_MAX
+#define MAX 10
+
+void dijkstra(int cost[MAX][MAX], int n, int v) {
+    int dist[MAX], path[MAX], s[MAX];
+    int i, j, u, min, num;
+
+    // Initialize arrays
+    for (i = 0; i < n; i++) {
+        s[i] = 0;
+        path[i] = v;
+        dist[i] = cost[v][i];
+    }
+    dist[v] = 0;
+
+    for (num = 1; num < n; num++) {
+        min = INF;
+        u = -1;
+        
+        // Find the vertex with the minimum distance
+        for (i = 0; i < n; i++) {
+            if (!s[i] && dist[i] < min) {
+                u = i;
+                min = dist[i];
+            }
+        }
+        
+        if (u == -1) break;  // All vertices are processed or remaining vertices are unreachable
+
+        s[u] = 1;
+
+        // Update distances
+        for (i = 0; i < n; i++) {
+            if (!s[i] && cost[u][i] < INF) {
+                if (dist[i] > dist[u] + cost[u][i]) {
+                    dist[i] = dist[u] + cost[u][i];
+                    path[i] = u;
+                }
+            }
+        }
+    }
+
+    // Print results
+    printf("\nDISTANCE NODE PATH\n");
+    for (i = 0; i < n; i++) {
+        printf("\n%d", dist[i]);
+        printf(" %d ", i);
+
+        // Print the path
+        j = i;
+        printf(" <-- %d", j);
+        while (path[j] != v) {
+            j = path[j];
+            printf(" <-- %d", j);
+        }
+        printf(" <-- %d", v);
+    }
+}
+
+int main() {
+    int cost[MAX][MAX];
+    int n, v;
+    int i, j;
+
+    printf("ENTER NUMBER OF VERTICES: ");
+    scanf("%d", &n);
+
+    printf("ENTER ADJACENCY MATRIX:\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            scanf("%d", &cost[i][j]);
+            if (i == j) {
+                cost[i][j] = 0;
+            } else if (cost[i][j] == -1) {
+                cost[i][j] = INF;
+            }
+        }
+    }
+
+    printf("ENTER SOURCE VERTEX: ");
+    scanf("%d", &v);
+
+    dijkstra(cost, n, v);
+
+    return 0;
+}
